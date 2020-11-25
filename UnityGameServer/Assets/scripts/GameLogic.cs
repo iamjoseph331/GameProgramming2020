@@ -5,8 +5,12 @@ using UnityEngine.UI;
 
 public class GameLogic : MonoBehaviour
 {
+    public Transform BoxSpawnPosition;
+    public GameObject Box;
+    // // private 
+    
     public float mainTimer = 600;
-
+    
     //the number of current players
     private int playerCount;
     //TBD
@@ -27,6 +31,10 @@ public class GameLogic : MonoBehaviour
         playerTransforms = new List<Transform>();
         playerScores = new List<int>();
         poles = new List<Transform>();
+
+        // Create box
+        Vector3 spawnPosition = BoxSpawnPosition.position;
+        GameObject Box1 = Instantiate(Box, spawnPosition, Quaternion.identity);
     }
 
     IEnumerator WaitSecond(int waitingTime)
