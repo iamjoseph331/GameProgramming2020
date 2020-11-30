@@ -147,8 +147,10 @@ public class KartController : MonoBehaviour
 
             foreach (ParticleSystem p in primaryParticles)
             {
-             //   p.startColor = Color.clear;
-            //    p.Play();
+#pragma warning disable CS0618 // 類型或成員已經過時
+                p.startColor = Color.clear;
+#pragma warning restore CS0618 // 類型或成員已經過時
+                p.Play();
             }
         }
 
@@ -237,12 +239,14 @@ public class KartController : MonoBehaviour
         driftMode = 0;
         first = false; second = false; third = false;
 
-        acceleration *= 1.5f;
+        acceleration *= (1.3f + 0.1f * driftPower);
         StartCoroutine(Countdown());
 
         foreach (ParticleSystem p in primaryParticles)
         {
+#pragma warning disable CS0618 // 類型或成員已經過時
             p.startColor = Color.clear;
+#pragma warning restore CS0618 // 類型或成員已經過時
             p.Stop();
         }
     }
@@ -307,7 +311,7 @@ public class KartController : MonoBehaviour
         }
     }
 
-    private void Speed(float x)
+    public void Speed(float x)
     {
         currentSpeed = x;
     }

@@ -13,9 +13,11 @@ public class Guesser : MonoBehaviour
     public int LapCounter = 0;
     public bool guessed = false;
     public int guess;
-    public Transform StartingPosition;
+    public Transform[] StartingPositions;
     public Text _question;
     public TMP_Text _laps;
+    public GameObject gameover, gameclear;
+    bool passCheckpoint = true;
 
     private bool end = false;
 
@@ -73,7 +75,39 @@ public class Guesser : MonoBehaviour
             }
         }
     }
-    
+
+    IEnumerator RegainMovement()
+    {
+        float duration = 3f;
+        float normalizedTime = 0;
+        while (normalizedTime <= 1f)
+        {
+            normalizedTime += Time.deltaTime / duration;
+            yield return null;
+        }
+        transform.parent.GetComponentInChildren<KartController>().acceleration = 
+            transform.parent.GetComponentInChildren<KartController>().startingAcceleration;
+    }
+
+    public void StartingCountdown()
+    {
+        StartCoroutine(RegainMovement());
+    }
+
+    IEnumerator Goal(bool flag)
+    {
+        if(flag) _question.text = "GOAL!!!";
+        else _question.text = "";
+        float duration = 0.5f;
+        float normalizedTime = 0;
+        while (normalizedTime <= 1f)
+        {
+            normalizedTime += Time.deltaTime / duration;
+            yield return null;
+        }
+        StartCoroutine(Goal(!flag));
+    }
+
     public void OnTriggerEnter(Collider other)
     {
         if(other.name == "GoalLine")
@@ -81,19 +115,21 @@ public class Guesser : MonoBehaviour
             if (guessed == true)
             {
                 LapCounter += 1;
+                passCheckpoint = false;
                 _laps.text = " " + (LapCounter + 1).ToString() + "/5";
             }
-            if(LapCounter == LapGoal)
-            {
-                end = true;
-            }
             guessed = false;
+        }
+        else if(other.name == "Slime")
+        {
+            gameover.SetActive(true);
+            Time.timeScale = 0;
         }
         else if (other.name == "AnswerA")
         {
             guess = 1;
             _question.color = Color.yellow;
-            _question.text = "No";
+            _question.text = "A. " + "No";
 
             StartCoroutine(Countdown());
         }
@@ -101,7 +137,23 @@ public class Guesser : MonoBehaviour
         {
             guess = 2;
             _question.color = Color.yellow;
-            _question.text = "Yes";
+            _question.text = "B. " + "Yes";
+
+            StartCoroutine(Countdown());
+        }
+        else if (other.name == "AnswerC")
+        {
+            guess = 3;
+            _question.color = Color.yellow;
+            _question.text = "C. " + "Yes";
+
+            StartCoroutine(Countdown());
+        }
+        else if (other.name == "AnswerD")
+        {
+            guess = 4;
+            _question.color = Color.yellow;
+            _question.text = "D. " + "Yes";
 
             StartCoroutine(Countdown());
         }
@@ -114,11 +166,11 @@ public class Guesser : MonoBehaviour
         }
         else if (other.name == "TransferZone")
         {
-            
             if (guess != groundTruth)
             {
-                transform.position = StartingPosition.position;
-                transform.parent.GetChild(2).rotation = StartingPosition.rotation;
+                transform.position = StartingPositions[LapCounter].position;
+                transform.parent.GetChild(2).rotation = StartingPositions[LapCounter].rotation;
+                transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 _question.text = "Wrong!";
             }
             else
@@ -126,7 +178,6 @@ public class Guesser : MonoBehaviour
                 guessed = true;
                 _question.text = "Correct!";
             }
-
             StartCoroutine(Countdown());
         }
         else if(other.name == "Accelerate")
@@ -139,7 +190,38 @@ public class Guesser : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
+        if(LapCounter == LapGoal)
+        {
+            if(!end)
+            {
+                StartCoroutine(Goal(true));
+                end = true;
+                gameclear.SetActive(true);
+            }
+        }
+        else if (transform.position.y > StartingPositions[LapCounter].position.y - 2.5)
+        {
+            passCheckpoint = true;
+        }
+        else if (passCheckpoint && transform.position.y < StartingPositions[LapCounter].position.y - 2.5)
+        {
+            transform.position = StartingPositions[LapCounter].position;
+            transform.parent.GetChild(2).rotation = StartingPositions[LapCounter].rotation;
+            transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            transform.parent.GetComponentInChildren<KartController>().acceleration = 0;
+            transform.parent.GetComponentInChildren<KartController>().Speed(0f);
+            StartCoroutine(RegainMovement());
+        }
+        else if(LapCounter > 0 && !passCheckpoint && transform.position.y < StartingPositions[LapCounter - 1].position.y - 2.5)
+        {
+            transform.position = StartingPositions[LapCounter].position;
+            transform.parent.GetChild(2).rotation = StartingPositions[LapCounter].rotation;
+            transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            transform.parent.GetComponentInChildren<KartController>().acceleration = 0;
+            transform.parent.GetComponentInChildren<KartController>().Speed(0f);
+            StartCoroutine(RegainMovement());
+        }
     }
 }
