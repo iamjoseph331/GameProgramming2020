@@ -17,16 +17,19 @@ public class KartController : MonoBehaviour
     float rotate, currentRotate;
     int driftDirection;
     float driftPower;
-    int driftMode = 0;
+    public int driftMode = 0;
     bool first, second, third;
     Color c;
 
     [Header("Bools")]
+    private bool boosting;
     public bool drifting;
+    public bool JumpInput = false, JumpEnd = false, AccelInput = false;
 
     [Header("Parameters")]
 
-    public float acceleration = 30f;
+    public float startingAcceleration;
+    public float acceleration = 80f;
     public float steering = 80f;
     public float gravity = 10f;
     public LayerMask layerMask;
@@ -43,7 +46,6 @@ public class KartController : MonoBehaviour
     public Color[] turboColors;
 
     public float HorizontalInput = 0f;
-    public bool JumpInput = false, JumpEnd = false, AccelInput = false;
 
     float HorizontalMovement()
     {
@@ -52,6 +54,20 @@ public class KartController : MonoBehaviour
             return Input.GetAxis("Horizontal");
         }
         return HorizontalInput;
+    }
+
+    private IEnumerator Countdown()
+    {
+        float duration = 2f;
+
+        float normalizedTime = 0;
+        while (normalizedTime <= 1f)
+        {
+            normalizedTime += Time.deltaTime / duration;
+            yield return null;
+        }
+        acceleration = startingAcceleration;
+        boosting = false;
     }
 
     bool JumpMovement()
@@ -204,7 +220,12 @@ public class KartController : MonoBehaviour
 
     public void Boost()
     {
+        if(boosting)
+        {
+            return;
+        }
         drifting = false;
+        boosting = true;
 
         if (driftMode > 0)
         {
@@ -216,13 +237,14 @@ public class KartController : MonoBehaviour
         driftMode = 0;
         first = false; second = false; third = false;
 
+        acceleration *= 1.5f;
+        StartCoroutine(Countdown());
+
         foreach (ParticleSystem p in primaryParticles)
         {
-        //    p.startColor = Color.clear;
-        //    p.Stop();
+            p.startColor = Color.clear;
+            p.Stop();
         }
-
-
     }
 
     public void Steer(int direction, float amount)
@@ -277,8 +299,6 @@ public class KartController : MonoBehaviour
 
     void PlayFlashParticle(Color c)
     {
-        
-
         foreach (ParticleSystem p in secondaryParticles)
         {
             var pmain = p.main;

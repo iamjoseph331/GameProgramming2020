@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.Networking;
 
 public class Guesser : MonoBehaviour
@@ -14,6 +15,7 @@ public class Guesser : MonoBehaviour
     public int guess;
     public Transform StartingPosition;
     public Text _question;
+    public TMP_Text _laps;
 
     private bool end = false;
 
@@ -26,6 +28,30 @@ public class Guesser : MonoBehaviour
         public int id;
         public string question;
         public int answer;
+    }
+
+    private IEnumerator Countdown()
+    {
+        float duration = 3f;
+        float normalizedTime = 0;
+        while (normalizedTime <= 1f)
+        {
+            normalizedTime += Time.deltaTime / duration;
+            yield return null;
+        }
+        _question.text = "";
+    }
+
+    private IEnumerator RespawnItem(Transform other)
+    {
+        float duration = 15f;
+        float normalizedTime = 0;
+        while(normalizedTime <= 1f)
+        {
+            normalizedTime += Time.deltaTime / duration;
+            yield return null;
+        }
+        other.GetComponent<MeshRenderer>().enabled = true;
     }
 
     IEnumerator GetRequest(string url)
@@ -52,10 +78,10 @@ public class Guesser : MonoBehaviour
     {
         if(other.name == "GoalLine")
         {
-            _question.text = "";
             if (guessed == true)
             {
                 LapCounter += 1;
+                _laps.text = " " + (LapCounter + 1).ToString() + "/5";
             }
             if(LapCounter == LapGoal)
             {
@@ -68,12 +94,16 @@ public class Guesser : MonoBehaviour
             guess = 1;
             _question.color = Color.yellow;
             _question.text = "No";
+
+            StartCoroutine(Countdown());
         }
         else if (other.name == "AnswerB")
         {
             guess = 2;
             _question.color = Color.yellow;
             _question.text = "Yes";
+
+            StartCoroutine(Countdown());
         }
         else if (other.name == "QuestionAppear")
         {
@@ -96,6 +126,15 @@ public class Guesser : MonoBehaviour
                 guessed = true;
                 _question.text = "Correct!";
             }
+
+            StartCoroutine(Countdown());
+        }
+        else if(other.name == "Accelerate")
+        {
+            other.transform.GetComponent<MeshRenderer>().enabled = false;
+            transform.parent.GetComponentInChildren<KartController>().driftMode = 1;
+            transform.parent.GetComponentInChildren<KartController>().Boost();
+            StartCoroutine(RespawnItem(other.transform));
         }
     }
 
