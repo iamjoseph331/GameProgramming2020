@@ -51,11 +51,12 @@ public class NetworkManager : MonoBehaviour
 
     public Player InstantiatePlayer()
     {
+        GameLogic gl = gameObject.GetComponent<GameLogic>();
         Player _player = Instantiate(playerPrefab, transform.position, Quaternion.identity).GetComponent<Player>();
-        if (CountPlayers() >= 2)
+        gl.players[CountPlayers()] = _player.kartcon.parent;
+        if (CountPlayers() >= 0)
         {
-            gameObject.GetComponent<GameLogic>().CountDown();
-            
+            gl.CountDown();
         }
         return _player;
     }

@@ -196,10 +196,20 @@ public class Guesser : MonoBehaviour
             StartCoroutine(RespawnItem(other.transform));
         }
     }
-
+    bool started = false;
     // Update is called once per frame
     private void FixedUpdate()
     {
+        if(!started && transform.parent.position.z >= -1)
+        {
+            started = true;
+            Transform tmp = transform.parent.Find("Canvas");
+            tmp = tmp.Find("ReadyPanel");
+            tmp = tmp.Find("READY");
+            tmp.GetComponentInChildren<Button>().onClick.Invoke();
+            GameObject.Find("Slime").GetComponent<slimeBehavior>().StartSlime();
+        }
+
         if(LapCounter == LapGoal)
         {
             if(!end)
