@@ -14,7 +14,7 @@ public class KartController : MonoBehaviour
     public List<ParticleSystem> secondaryParticles = new List<ParticleSystem>();
 
     float speed, currentSpeed;
-    float rotate, currentRotate;
+    float rotate = 0f, currentRotate = 0f;
     int driftDirection;
     float driftPower;
     public int driftMode = 0;
@@ -118,19 +118,15 @@ public class KartController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            float time = Time.timeScale == 1 ? .9f : 1;
-            Time.timeScale = time;
-        }
-
         //Follow Collider
         transform.position = sphere.transform.position - new Vector3(0, 0.4f, 0);
+        transform.parent.position += transform.localPosition;
+        sphere.transform.position -= transform.localPosition;
+        transform.position -= transform.localPosition;
 
         //Accelerate
         if (AccelMovement())
             speed = acceleration;
-
         //Steer
         if (HorizontalMovement() != 0)
         {
@@ -138,7 +134,6 @@ public class KartController : MonoBehaviour
             float amount = Mathf.Abs((HorizontalMovement()));
             Steer(dir, amount);
         }
-
         //Drift
         if (JumpMovement() && !drifting && HorizontalMovement() != 0)
         {
@@ -169,9 +164,9 @@ public class KartController : MonoBehaviour
             Boost();
         }
 
-        currentSpeed = Mathf.SmoothStep(currentSpeed, speed, Time.deltaTime * 12f); speed = 0.3f;
-        currentRotate = Mathf.Lerp(currentRotate, rotate, Time.deltaTime * 4f); rotate = 0f;
-
+        currentSpeed = Mathf.SmoothStep(currentSpeed, speed, Time.deltaTime * 12f); speed = 0f; //slowly return to default
+        
+        currentRotate = Mathf.Lerp(currentRotate, rotate, Time.deltaTime * 4f); rotate = 0f; //slowly return to default
         //Animations    
 
         //a) Kart
@@ -206,14 +201,16 @@ public class KartController : MonoBehaviour
         //Gravity
         sphere.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
 
+
         //Steering
-        transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, new Vector3(0, transform.eulerAngles.y + currentRotate, 0), Time.deltaTime * 5f);
+        transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, new Vector3(0, transform.eulerAngles.y + currentRotate, 0), 
+                Time.deltaTime * 5f);
 
         RaycastHit hitOn;
         RaycastHit hitNear;
 
         Physics.Raycast(transform.position + (transform.up*.1f), Vector3.down, out hitOn, 1.1f,layerMask);
-        Physics.Raycast(transform.position + (transform.up * .1f)   , Vector3.down, out hitNear, 2.0f, layerMask);
+        Physics.Raycast(transform.position + (transform.up * .1f), Vector3.down, out hitNear, 2.0f, layerMask);
 
         //Normal Rotation
         kartNormal.up = Vector3.Lerp(kartNormal.up, hitNear.normal, Time.deltaTime * 8.0f);
@@ -261,7 +258,7 @@ public class KartController : MonoBehaviour
         if(!first)
             c = Color.clear;
 
-        if (driftPower > 50 && driftPower < 100-1 && !first)
+        if (driftPower > 15 && driftPower < 30-1 && !first)
         {
             first = true;
             c = turboColors[0];
@@ -270,7 +267,7 @@ public class KartController : MonoBehaviour
             PlayFlashParticle(c);
         }
 
-        if (driftPower > 100 && driftPower < 150- 1 && !second)
+        if (driftPower > 30 && driftPower < 45- 1 && !second)
         {
             second = true;
             c = turboColors[1];
@@ -279,7 +276,7 @@ public class KartController : MonoBehaviour
             PlayFlashParticle(c);
         }
 
-        if (driftPower > 150 && !third)
+        if (driftPower > 45 && !third)
         {
             third = true;
             c = turboColors[2];

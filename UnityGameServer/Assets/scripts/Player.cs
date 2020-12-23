@@ -65,13 +65,12 @@ public class Player : MonoBehaviour
             deltaHorizontal += 1 / moveSpeed;
             deltaHorizontal = Mathf.Min(1f, deltaHorizontal);
         }
-        if(!inputs[2] && !inputs[3])
+        else if(!inputs[2] && !inputs[3])
         {
-            if(deltaHorizontal != 0f)
-                deltaHorizontal = 0f;
+            deltaHorizontal = 0f;
         }
 
-        kartcon.GetComponent<KartController>().HorizontalInput = deltaHorizontal + 0.01f;
+        kartcon.GetComponent<KartController>().HorizontalInput = deltaHorizontal;
         Move(_inputDirection);
     }
 

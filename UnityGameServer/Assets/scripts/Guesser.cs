@@ -18,10 +18,12 @@ public class Guesser : MonoBehaviour
     public TMP_Text _laps;
     public GameObject gameover, gameclear;
     bool passCheckpoint = true;
+    public bool inOrder = true;
 
     private bool end = false;
 
     public int groundTruth = 1;
+    string Ansa, Ansb, Ansc, Ansd;
     // Start is called before the first frame update
 
     [Serializable]
@@ -30,6 +32,8 @@ public class Guesser : MonoBehaviour
         public int id;
         public string question;
         public int answer;
+        public int taku;
+        public string ansA, ansB, ansC, ansD;
     }
 
     private IEnumerator Countdown()
@@ -68,6 +72,10 @@ public class Guesser : MonoBehaviour
                 _question.color = Color.black;
                 _question.text = p.question;
                 groundTruth = p.answer;
+                Ansa = p.ansA;
+                Ansb = p.ansB;
+                Ansc = p.ansC;
+                Ansd = p.ansD;
             }
             else
             {
@@ -129,7 +137,7 @@ public class Guesser : MonoBehaviour
         {
             guess = 1;
             _question.color = Color.yellow;
-            _question.text = "A. " + "No";
+            _question.text = "A. " + Ansa;
 
             StartCoroutine(Countdown());
         }
@@ -137,7 +145,7 @@ public class Guesser : MonoBehaviour
         {
             guess = 2;
             _question.color = Color.yellow;
-            _question.text = "B. " + "Yes";
+            _question.text = "B. " + Ansb;
 
             StartCoroutine(Countdown());
         }
@@ -145,7 +153,7 @@ public class Guesser : MonoBehaviour
         {
             guess = 3;
             _question.color = Color.yellow;
-            _question.text = "C. " + "Yes";
+            _question.text = "C. " + Ansc;
 
             StartCoroutine(Countdown());
         }
@@ -153,7 +161,7 @@ public class Guesser : MonoBehaviour
         {
             guess = 4;
             _question.color = Color.yellow;
-            _question.text = "D. " + "Yes";
+            _question.text = "D. " + Ansd;
 
             StartCoroutine(Countdown());
         }
@@ -162,6 +170,10 @@ public class Guesser : MonoBehaviour
             _question.color = Color.red;
             _question.text = "Question " + (LapCounter + 1).ToString();
             int rand = UnityEngine.Random.Range(0, maxQuestionCount);
+            if(inOrder)
+            {
+                rand = LapCounter + 1;
+            }
             StartCoroutine(GetRequest(string.Concat("https://my-json-server.typicode.com/iamjoseph331/Database/posts/", rand.ToString()))); 
         }
         else if (other.name == "TransferZone")
@@ -199,6 +211,9 @@ public class Guesser : MonoBehaviour
                 StartCoroutine(Goal(true));
                 end = true;
                 gameclear.SetActive(true);
+                transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                transform.parent.GetComponentInChildren<KartController>().acceleration = 0;
+                transform.parent.GetComponentInChildren<KartController>().Speed(0f);
             }
         }
         else if (transform.position.y > StartingPositions[LapCounter].position.y - 2.5)
