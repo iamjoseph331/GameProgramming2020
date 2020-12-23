@@ -52,17 +52,10 @@ public class NetworkManager : MonoBehaviour
     public Player InstantiatePlayer()
     {
         Player _player = Instantiate(playerPrefab, transform.position, Quaternion.identity).GetComponent<Player>();
-        if (CountPlayers() >= 1)
+        if (CountPlayers() >= 2)
         {
             gameObject.GetComponent<GameLogic>().CountDown();
-            foreach(Client _client in Server.clients.Values)
-            {
-                if (_client.player != null)
-                {
-                    gameObject.GetComponent<GameLogic>().AssignPlayerNumber(_client.player.transform);
-                }
-            }
-            gameObject.GetComponent<GameLogic>().AssignPlayerNumber(_player.transform);
+            
         }
         return _player;
     }
