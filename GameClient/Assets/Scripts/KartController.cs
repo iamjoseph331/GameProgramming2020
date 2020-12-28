@@ -14,6 +14,7 @@ public class KartController : MonoBehaviour
     public List<ParticleSystem> secondaryParticles = new List<ParticleSystem>();
 
     float speed, currentSpeed;
+    float MAXSPEED = 400f;
     float rotate, currentRotate;
     int driftDirection;
     float driftPower;
@@ -171,6 +172,8 @@ public class KartController : MonoBehaviour
         currentRotate = Mathf.Lerp(currentRotate, rotate, Time.deltaTime * 4f); rotate = 0f; //slowly return to default
 
         //Animations    
+        if (transform.GetComponent<AudioSource>() != null)
+            transform.GetComponent<AudioSource>().volume = currentSpeed / MAXSPEED;
 
         //a) Kart
         if (!drifting)

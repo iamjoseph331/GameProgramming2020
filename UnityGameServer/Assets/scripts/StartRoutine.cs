@@ -11,7 +11,7 @@ public class StartRoutine : MonoBehaviour
     IEnumerator Countdown()
     {
         txt.text = "3";
-        float duration = 3f;
+        float duration = 5f;
         float normalizedTime = 0;
         while (normalizedTime <= 1f)
         {

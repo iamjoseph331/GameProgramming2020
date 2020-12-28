@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     public Transform kartcon;
 
     private bool[] inputs;
+    private Quaternion rotations;
     private float yVelocity = 0;
 
     private void Start()
@@ -72,6 +73,8 @@ public class Player : MonoBehaviour
 
         kartcon.GetComponent<KartController>().HorizontalInput = deltaHorizontal;
         Move(_inputDirection);
+
+        transform.rotation = rotations;
     }
 
     private void Move(Vector2 _inputDirection)
@@ -88,7 +91,7 @@ public class Player : MonoBehaviour
 
     public void SetInput(bool[] _inputs, Quaternion _rotation)
     {
-        inputs = _inputs;
-        //transform.rotation = _rotation;
+            inputs = _inputs;
+            rotations = _rotation;        
     }
 }

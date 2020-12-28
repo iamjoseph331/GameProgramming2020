@@ -17,6 +17,8 @@ public class Guesser : MonoBehaviour
     public Text _question;
     public TMP_Text _laps;
     public GameObject gameover, gameclear;
+
+    public AudioClip correct, wrong, death, victory;
     bool passCheckpoint = true;
 
     private bool end = false;
@@ -115,6 +117,11 @@ public class Guesser : MonoBehaviour
         StartCoroutine(Goal(!flag));
     }
 
+    private int Min(int a, int b)
+    {
+        return a > b ? b : a;
+    }
+
     public void OnTriggerEnter(Collider other)
     {
         if(other.name == "GoalLine")
@@ -123,14 +130,20 @@ public class Guesser : MonoBehaviour
             {
                 LapCounter += 1;
                 passCheckpoint = false;
-                _laps.text = " " + (LapCounter + 1).ToString() + "/5";
+                _laps.text = " " + Min(5, LapCounter + 1).ToString() + "/5";
             }
             guessed = false;
         }
         else if(other.name == "Slime")
         {
             gameover.SetActive(true);
-            Time.timeScale = 0;
+            transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            transform.parent.GetComponentInChildren<KartController>().acceleration = 0;
+            transform.parent.GetComponentInChildren<KartController>().Speed(0f);
+            GameObject.Find("Slime").GetComponent<AudioSource>().Stop();
+            transform.GetComponent<AudioSource>().clip = death;
+            transform.GetComponent<AudioSource>().Play();
+            end = true;
         }
         else if (other.name == "AnswerA")
         {
@@ -180,11 +193,15 @@ public class Guesser : MonoBehaviour
                 transform.parent.GetChild(2).rotation = StartingPositions[LapCounter].rotation;
                 transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 _question.text = "Wrong!";
+                transform.GetComponent<AudioSource>().clip = wrong;
+                transform.GetComponent<AudioSource>().Play();
             }
             else
             {
                 guessed = true;
                 _question.text = "Correct!";
+                transform.GetComponent<AudioSource>().clip = correct;
+                transform.GetComponent<AudioSource>().Play();
             }
             StartCoroutine(Countdown());
         }
@@ -208,6 +225,7 @@ public class Guesser : MonoBehaviour
             tmp = tmp.Find("READY");
             tmp.GetComponentInChildren<Button>().onClick.Invoke();
             GameObject.Find("Slime").GetComponent<slimeBehavior>().StartSlime();
+            GameObject.Find("roadStart").GetComponent<AudioSource>().Play();
         }
 
         if(LapCounter == LapGoal)
@@ -220,6 +238,9 @@ public class Guesser : MonoBehaviour
                 transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 transform.parent.GetComponentInChildren<KartController>().acceleration = 0;
                 transform.parent.GetComponentInChildren<KartController>().Speed(0f);
+                transform.GetComponent<AudioSource>().clip = victory;
+                transform.GetComponent<AudioSource>().Play();
+                GameObject.Find("Slime").GetComponent<slimeBehavior>().Stop();
             }
         }
         else if (transform.position.y > StartingPositions[LapCounter].position.y - 2.5)
