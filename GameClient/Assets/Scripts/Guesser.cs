@@ -144,6 +144,7 @@ public class Guesser : MonoBehaviour
             transform.GetComponent<AudioSource>().clip = death;
             transform.GetComponent<AudioSource>().Play();
             end = true;
+            Time.timeScale = 0;
         }
         else if (other.name == "AnswerA")
         {

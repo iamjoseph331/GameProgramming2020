@@ -17,18 +17,18 @@ public class ServerHandle
         }
 
         Server.clients[_fromClient].SendIntoGame(_username);
-        
     }
 
     public static void PlayerMovement(int _fromClient, Packet _packet)
-    {
+    {/*
         bool[] _inputs = new bool[_packet.ReadInt()];
         for (int i = 0; i < _inputs.Length; ++i)
         {
             _inputs[i] = _packet.ReadBool();
-        }
+        }*/
+        Vector3 _position = _packet.ReadVector3();
         Quaternion _rotation = _packet.ReadQuaternion();
 
-        Server.clients[_fromClient].player.SetInput(_inputs, _rotation);
+        Server.clients[_fromClient].player.SetInput(_position, _rotation);
     }
 }

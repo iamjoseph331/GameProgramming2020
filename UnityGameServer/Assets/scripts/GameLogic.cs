@@ -27,6 +27,7 @@ public class GameLogic : MonoBehaviour
             tmp = tmp.Find("ReadyPanel");
             tmp = tmp.Find("READY");
             tmp.GetComponentInChildren<Button>().onClick.Invoke();
+            players[i].GetComponent<Player>().MoveToStart();
         }
     }
 

@@ -11,7 +11,8 @@ public class Player : MonoBehaviour
     public float jumpSpeed = 5f;
     public Transform kartcon;
 
-    private bool[] inputs;
+    private bool start = false;
+    private Vector3 positions;
     private Quaternion rotations;
     private float yVelocity = 0;
 
@@ -27,71 +28,35 @@ public class Player : MonoBehaviour
         id = _id;
         username = _username;
 
-        inputs = new bool[4];
+        start = false;
     }
-    private bool flag = false;
-    private float deltaHorizontal = 0f;
 
     public void FixedUpdate()
     {
-        Vector2 _inputDirection = Vector2.zero;
-        if (inputs == null) return;
-        if (inputs[0])
-        {
-            kartcon.GetComponent<KartController>().AccelInput = true;
-        }
-        else
-        {
-            kartcon.GetComponent<KartController>().AccelInput = false;
-        }
-        if (inputs[1] && !flag)
-        {
-            flag = true;
-            kartcon.GetComponent<KartController>().JumpInput = true;
-            kartcon.GetComponent<KartController>().JumpEnd = false;
-        }
-        else if(inputs[1] == false)
-        {
-            flag = false;
-            kartcon.GetComponent<KartController>().JumpInput = false;
-            kartcon.GetComponent<KartController>().JumpEnd = true;
-        }
-        if (inputs[2])
-        {
-            deltaHorizontal -= 1 / moveSpeed;
-            deltaHorizontal = Mathf.Max(-1f, deltaHorizontal);
-        }
-        if (inputs[3])
-        {
-            deltaHorizontal += 1 / moveSpeed;
-            deltaHorizontal = Mathf.Min(1f, deltaHorizontal);
-        }
-        else if(!inputs[2] && !inputs[3])
-        {
-            deltaHorizontal = 0f;
-        }
-
-        kartcon.GetComponent<KartController>().HorizontalInput = deltaHorizontal;
-        Move(_inputDirection);
-
+        transform.position = positions;
         transform.GetChild(2).rotation = rotations;
+        Move();
     }
 
-    private void Move(Vector2 _inputDirection)
+    private void Move()
     {
-        Vector3 _moveDirection = transform.right * _inputDirection.x + transform.forward * _inputDirection.y;
-        _moveDirection *= moveSpeed;
-        
-        yVelocity = gravity;
-        _moveDirection.y = yVelocity;
-
-        ServerSend.PlayerPosition(this);
+        ServerSend.PlayerPosition(this, false);
         ServerSend.PlayerRotation(this);
     }
 
-    public void SetInput(bool[] _inputs, Quaternion _rotation)
+    public void MoveToStart()
     {
-            inputs = _inputs;
-            rotations = _rotation;        
+        ServerSend.PlayerPosition(this, true);
+        ServerSend.PlayerRotation(this);
+        start = true;
+    }
+
+    public void SetInput(Vector3 position, Quaternion _rotation)
+    {
+        if(start)
+        {
+            positions = position;
+            rotations = _rotation;
+        }
     }
 }

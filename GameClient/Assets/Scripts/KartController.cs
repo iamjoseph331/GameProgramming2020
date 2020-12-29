@@ -199,13 +199,13 @@ public class KartController : MonoBehaviour
     private void FixedUpdate()
     {
         //Forward Acceleration
-        /*if(!drifting)
+        if(!drifting)
             sphere.AddForce(-kartModel.transform.right * currentSpeed, ForceMode.Acceleration);
         else
             sphere.AddForce(transform.forward * currentSpeed, ForceMode.Acceleration);
 
         //Gravity
-        sphere.AddForce(Vector3.down * gravity, ForceMode.Acceleration);*/
+        sphere.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
 
         //Steering
         transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, new Vector3(0, transform.eulerAngles.y + currentRotate, 0), Time.deltaTime * 5f);

@@ -83,14 +83,17 @@ public class ServerSend
         }
     }
 
-    public static void PlayerPosition(Player _player)
+    public static void PlayerPosition(Player _player, bool toSelf)
     {
         using (Packet _packet = new Packet((int)ServerPackets.playerPosition))
         {
             _packet.Write(_player.id);
             _packet.Write(_player.transform.position);
 
-            SendTCPDataToAll(_packet);
+            if (toSelf)
+                SendTCPDataToAll(_packet);
+            else
+                SendTCPDataToAll(_player.id, _packet);
         }
     }
 
