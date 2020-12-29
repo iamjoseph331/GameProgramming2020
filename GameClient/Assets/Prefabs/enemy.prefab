@@ -25058,7 +25058,6 @@ GameObject:
   m_Component:
   - component: {fileID: 737553313246500400}
   - component: {fileID: 737553313246500366}
-  - component: {fileID: 1748640931240165421}
   - component: {fileID: 8116475612081007748}
   m_Layer: 2
   m_Name: Kart
@@ -25095,45 +25094,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.41
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1748640931240165421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 737553313246500403}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e06110106688fd349946b36a76facf7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  kartModel: {fileID: 737553313026624199}
-  kartNormal: {fileID: 737553314633015451}
-  sphere: {fileID: 7259861152510407858}
-  primaryParticles: []
-  secondaryParticles: []
-  driftMode: 0
-  drifting: 0
-  JumpInput: 0
-  JumpEnd: 0
-  AccelInput: 0
-  startingAcceleration: 60
-  acceleration: 0
-  steering: 14
-  gravity: 40
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 51
-  frontWheels: {fileID: 737553314312151056}
-  backWheels: {fileID: 737553314701684340}
-  steeringWheel: {fileID: 737553314484362707}
-  wheelParticles: {fileID: 737553314726107649}
-  flashParticles: {fileID: 737553313373665406}
-  turboColors:
-  - {r: 0, g: 0.65882355, b: 1, a: 1}
-  - {r: 0.98823535, g: 1, b: 0, a: 1}
-  - {r: 0.8000001, g: 0, b: 1, a: 1}
-  HorizontalInput: 0
 --- !u!82 &8116475612081007748
 AudioSource:
   m_ObjectHideFlags: 0
@@ -44829,7 +44789,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 737553314123334863}
+      - m_Target: {fileID: 0}
         m_MethodName: StartingCountdown
         m_Mode: 1
         m_Arguments:
@@ -54812,7 +54772,6 @@ GameObject:
   m_Component:
   - component: {fileID: 737553314123334861}
   - component: {fileID: 737553314123334860}
-  - component: {fileID: 737553314123334863}
   - component: {fileID: 7259861152510407858}
   m_Layer: 2
   m_Name: Collider
@@ -54848,37 +54807,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.8
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &737553314123334863
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 737553314123334897}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb0353e6de71943458f152abd900d859, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LapGoal: 5
-  LapCounter: 0
-  guessed: 0
-  guess: 0
-  StartingPositions:
-  - {fileID: 6608005739972578126, guid: d711001d01c3e254aba382440771c23c, type: 3}
-  - {fileID: 4269538522762784644, guid: 814d98196601c504186e26e05f9d7fcd, type: 3}
-  - {fileID: 8803932091619938199, guid: 02675e5a2e2fd0d41a09f4b43b9ffec0, type: 3}
-  - {fileID: 6178267723552736210, guid: d12e5b6268b96ea41aaa239ca1c1b810, type: 3}
-  - {fileID: 3708874443581193010, guid: 6b38f72f1df982f4c93368c3296c0ca5, type: 3}
-  _question: {fileID: 737553313063272434}
-  _laps: {fileID: 737553313667709426}
-  gameover: {fileID: 737553313045128110}
-  gameclear: {fileID: 737553314275701927}
-  correct: {fileID: 8300000, guid: df9a3d07374d055409ebe163ffed780b, type: 3}
-  wrong: {fileID: 8300000, guid: 5d5c7aa1a799b784baf2757f5eb4c1a9, type: 3}
-  death: {fileID: 8300000, guid: e64ed19b18d966a4fadb48bf2839d848, type: 3}
-  victory: {fileID: 8300000, guid: 26a33d5706525c445a74849f4cf32a49, type: 3}
-  groundTruth: 1
 --- !u!54 &7259861152510407858
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -54904,7 +54832,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 737553314131956976}
-  - component: {fileID: 5228859936212499347}
   - component: {fileID: 8242621837197160316}
   m_Layer: 2
   m_Name: enemy
@@ -54930,18 +54857,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5228859936212499347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 737553314131956978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bdcd1c6445aa2c44941c68487443478, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8242621837197160316
 MonoBehaviour:
   m_ObjectHideFlags: 0

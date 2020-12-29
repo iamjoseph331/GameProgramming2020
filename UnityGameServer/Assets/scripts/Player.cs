@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
         kartcon.GetComponent<KartController>().HorizontalInput = deltaHorizontal;
         Move(_inputDirection);
 
-        transform.rotation = rotations;
+        transform.GetChild(2).rotation = rotations;
     }
 
     private void Move(Vector2 _inputDirection)

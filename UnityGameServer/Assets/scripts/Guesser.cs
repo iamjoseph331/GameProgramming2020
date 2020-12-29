@@ -127,7 +127,7 @@ public class Guesser : MonoBehaviour
     {
         if(other.name == "GoalLine")
         {
-            if (guessed == true)
+            if (guessed == true && transform.position.y > StartingPositions[LapCounter].position.y)
             {
                 LapCounter += 1;
                 passCheckpoint = false;
