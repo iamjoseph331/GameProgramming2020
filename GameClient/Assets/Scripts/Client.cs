@@ -4,13 +4,15 @@ using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using System;
+using System.IO;
 
 public class Client : MonoBehaviour
 {
     public static Client instance;
     public static int dataBufferSize = 4096;
 
-    public string ip = "127.0.0.1";
+    private string path = "config.ini";
+    private string ip = "127.0.1.12";
     public int port = 26950;
     public int myId = 0;
     public TCP tcp;
@@ -35,6 +37,15 @@ public class Client : MonoBehaviour
 
     private void Start()
     {
+        string configpath = Path.Combine(Application.dataPath, path);
+        print(configpath);
+        StreamReader reader = new StreamReader(configpath);
+        if(reader != null)
+        {
+            char[] whitespace = { ' ', '\n', '\r' };
+            ip = reader.ReadToEnd().Trim(whitespace);
+            reader.Close();
+        }
         tcp = new TCP();
         udp = new UDP();
     }
@@ -71,6 +82,7 @@ public class Client : MonoBehaviour
             };
 
             receiveBuffer = new byte[dataBufferSize];
+
             socket.BeginConnect(instance.ip, instance.port, ConnectCallback, socket);
         }
 
@@ -204,6 +216,7 @@ public class Client : MonoBehaviour
 
         public UDP()
         {
+            print(instance.ip);
             endPoint = new IPEndPoint(IPAddress.Parse(instance.ip), instance.port);
         }
 
@@ -213,6 +226,7 @@ public class Client : MonoBehaviour
         {
             socket = new UdpClient(_localPort);
 
+            print(endPoint.ToString());
             socket.Connect(endPoint);
             socket.BeginReceive(ReceiveCallback, null);
 

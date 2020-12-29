@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 
 public class Guesser : MonoBehaviour
 {
-    private int maxQuestionCount = 7;
+    private int maxQuestionCount = 8;
     public int LapGoal = 5;
     public int LapCounter = 0;
     public bool guessed = false;
