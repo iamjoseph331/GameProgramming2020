@@ -34,7 +34,7 @@ public class Guesser : MonoBehaviour
         public string question;
         public int answer;
         public int taku;
-        public string ansA, ansB, ansC, ansD;
+        public string ansa, ansb, ansc, ansd;
     }
 
     private IEnumerator Countdown()
@@ -73,10 +73,10 @@ public class Guesser : MonoBehaviour
                 _question.color = Color.black;
                 _question.text = p.question;
                 groundTruth = p.answer;
-                Ansa = p.ansA;
-                Ansb = p.ansB;
-                Ansc = p.ansC;
-                Ansd = p.ansD;
+                Ansa = p.ansa;
+                Ansb = p.ansb;
+                Ansc = p.ansc;
+                Ansd = p.ansd;
             }
             else
             {
@@ -182,7 +182,7 @@ public class Guesser : MonoBehaviour
             _question.color = Color.red;
             _question.text = "Question " + (LapCounter + 1).ToString();
             //int rand = UnityEngine.Random.Range(0, maxQuestionCount);
-            int rand = LapCounter + 1;
+            int rand = LapCounter;
             StartCoroutine(GetRequest(string.Concat("https://my-json-server.typicode.com/iamjoseph331/Database/posts/", rand.ToString()))); 
         }
         else if (other.name == "TransferZone")

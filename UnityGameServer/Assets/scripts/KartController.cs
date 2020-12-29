@@ -176,6 +176,7 @@ public class KartController : MonoBehaviour
         if (!drifting)
         {
             kartModel.localEulerAngles = Vector3.Lerp(kartModel.localEulerAngles, new Vector3(0, 90 + (HorizontalMovement() * 15), kartModel.localEulerAngles.z), .2f);
+            //kartModel.parent.localRotation = Quaternion.identity;//???
         }
         else
         {

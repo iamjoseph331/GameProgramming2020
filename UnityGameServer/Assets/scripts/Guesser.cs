@@ -184,7 +184,7 @@ public class Guesser : MonoBehaviour
             int rand = UnityEngine.Random.Range(0, maxQuestionCount);
             if(inOrder)
             {
-                rand = LapCounter + 1;
+                rand = LapCounter;
             }
             StartCoroutine(GetRequest(string.Concat("https://my-json-server.typicode.com/iamjoseph331/Database/posts/", rand.ToString()))); 
         }

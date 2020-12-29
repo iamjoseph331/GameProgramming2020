@@ -179,6 +179,7 @@ public class KartController : MonoBehaviour
         if (!drifting)
         {
             kartModel.localEulerAngles = Vector3.Lerp(kartModel.localEulerAngles, new Vector3(0, 90 + (HorizontalMovement() * 15), kartModel.localEulerAngles.z), .2f);
+            //kartModel.parent.localRotation = Quaternion.identity;//???
         }
         else
         {
@@ -193,7 +194,6 @@ public class KartController : MonoBehaviour
 
         //c) Steering Wheel
         steeringWheel.localEulerAngles = new Vector3(-25, 90, ((HorizontalMovement() * 45)));
-
     }
 
     private void FixedUpdate()
@@ -209,7 +209,7 @@ public class KartController : MonoBehaviour
 
         //Steering
         transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, new Vector3(0, transform.eulerAngles.y + currentRotate, 0), Time.deltaTime * 5f);
-         
+
         RaycastHit hitOn;
         RaycastHit hitNear;
 
