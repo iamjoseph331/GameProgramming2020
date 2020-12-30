@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Networking;
+using System.IO;
 
 public class Guesser : MonoBehaviour
 {
@@ -27,6 +28,31 @@ public class Guesser : MonoBehaviour
     public int groundTruth = 1;
     string Ansa, Ansb, Ansc, Ansd;
     // Start is called before the first frame update
+
+    string path = "config.ini";
+    int twos, threes, fours;
+    private void Start()
+    {
+        string configpath = Path.Combine(Application.dataPath, path);
+        print(configpath);
+        StreamReader reader = new StreamReader(configpath);
+        if (reader != null)
+        {
+            string[] buf = reader.ReadToEnd().Split(' ');
+            twos = Int32.Parse(buf[0]);
+            threes = Int32.Parse(buf[1]);
+            fours = Int32.Parse(buf[2]);
+            reader.Close();
+        }
+        print("2: " + twos);
+        print("3: " + threes);
+        print("4: " + fours);
+    }
+
+    public void Casual()
+    {
+        inOrder = true;
+    }
 
     [Serializable]
     public class Post
@@ -181,7 +207,25 @@ public class Guesser : MonoBehaviour
         {
             _question.color = Color.red;
             _question.text = "Question " + (LapCounter + 1).ToString();
-            int rand = UnityEngine.Random.Range(0, maxQuestionCount);
+
+            int rand;
+            if(LapCounter == 2)
+            {
+                rand = twos + UnityEngine.Random.Range(0, threes);
+            }
+            else if(LapCounter == 3)
+            {
+                rand = twos + threes + UnityEngine.Random.Range(0, fours);
+            }
+            else
+            {
+                int tmp = UnityEngine.Random.Range(0, twos);
+                while(tmp == 2 || tmp == 3)
+                {
+                    tmp = UnityEngine.Random.Range(0, twos);
+                }
+                rand = tmp;
+            }
             if(inOrder)
             {
                 rand = LapCounter;
