@@ -9,7 +9,7 @@ public class GameLogic : MonoBehaviour
     public Transform[] players;
     private IEnumerator TenSecondes()
     {
-        float duration = 10f;
+        float duration = 5f;
         float normalizedTime = 0f;
         while(normalizedTime < 1f)
         {
